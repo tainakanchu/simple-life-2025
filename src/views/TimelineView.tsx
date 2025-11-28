@@ -2,6 +2,7 @@ import React from 'react'
 import { Stage } from '../types'
 import { parseTime, parseEndTime } from '../utils'
 import ActCard from '../components/ActCard'
+import { AppTranslation } from '../i18n'
 
 interface TimelineViewProps {
   stages: Stage
@@ -9,6 +10,7 @@ interface TimelineViewProps {
   isFavorite: (day: string, stage: string, artist: string) => boolean
   toggleFavorite: (day: string, stage: string, artist: string) => void
   getCurrentMinutes: () => number
+  translation: AppTranslation
 }
 
 export default function TimelineView({
@@ -16,7 +18,8 @@ export default function TimelineView({
   activeDay,
   isFavorite,
   toggleFavorite,
-  getCurrentMinutes
+  getCurrentMinutes,
+  translation
 }: TimelineViewProps) {
   const allActs: any[] = []
   Object.entries(stages).forEach(([stage, acts]) => {
@@ -64,6 +67,7 @@ export default function TimelineView({
               isNow={isNow}
               isPast={isPast}
               showStage
+              translation={translation}
             />
           </React.Fragment>
         )
