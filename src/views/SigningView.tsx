@@ -1,5 +1,6 @@
 import { SigningEvent } from "../types";
 import { parseTime, parseEndTime, formatCountdown } from "../utils";
+import { AppTranslation } from "../i18n";
 
 interface SigningViewProps {
   events: SigningEvent[];
@@ -7,6 +8,7 @@ interface SigningViewProps {
   isFavorite: (day: string, stage: string, artist: string) => boolean;
   toggleFavorite: (day: string, stage: string, artist: string) => void;
   getCurrentMinutes: () => number;
+  translation: AppTranslation;
 }
 
 export default function SigningView({
@@ -15,6 +17,7 @@ export default function SigningView({
   isFavorite,
   toggleFavorite,
   getCurrentMinutes,
+  translation,
 }: SigningViewProps) {
   const now = getCurrentMinutes();
 
@@ -55,21 +58,21 @@ export default function SigningView({
               WebkitTextFillColor: "transparent",
             }}
           >
-            音樂人簽名會
+            {translation.signing.title}
           </span>
         </div>
         <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.8 }}>
           <div style={{ display: "flex", gap: 8, marginBottom: 4 }}>
             <span style={{ color: "#FF88B0" }}>📍</span>
-            <span>Legacy 舞台左側の入口付近</span>
+            <span>{translation.signing.location}</span>
           </div>
           <div style={{ display: "flex", gap: 8, marginBottom: 4 }}>
             <span style={{ color: "#FF88B0" }}>📝</span>
-            <span>公式グッズ・アーティストグッズのみ対応</span>
+            <span>{translation.signing.goods}</span>
           </div>
           <div style={{ display: "flex", gap: 8 }}>
             <span style={{ color: "#FF88B0" }}>⚠️</span>
-            <span>スタッフの案内に従って並んでください</span>
+            <span>{translation.signing.caution}</span>
           </div>
         </div>
       </div>
@@ -157,16 +160,16 @@ export default function SigningView({
                 <div style={{ fontSize: 11, color: "#64748b" }}>
                   {isNow ? (
                     <span style={{ color: "#FF88B0", fontWeight: 600 }}>
-                      サイン会中!
+                      {translation.signing.ongoing}
                     </span>
                   ) : isPast ? (
-                    <span>終了</span>
+                    <span>{translation.signing.ended}</span>
                   ) : minutesUntil <= 30 ? (
                     <span style={{ color: "#62FA03" }}>
-                      あと {formatCountdown(minutesUntil)}
+                      {translation.timeUntil(formatCountdown(minutesUntil) || "")}
                     </span>
                   ) : (
-                    <span>サイン会</span>
+                    <span>{translation.signing.upcoming}</span>
                   )}
                 </div>
               </div>

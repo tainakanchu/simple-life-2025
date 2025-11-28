@@ -6,11 +6,13 @@ import TimelineView from "./views/TimelineView";
 import StagesView from "./views/StagesView";
 import FavoritesView from "./views/FavoritesView";
 import SigningView from "./views/SigningView";
+import { AppTranslation, Locale, detectLocale, translations } from "./i18n";
 
 type ViewMode = "timeline" | "stages" | "signing" | "favorites";
 type ActiveDay = "day1" | "day2";
 
 export default function App() {
+  const [locale, setLocale] = useState<Locale>(() => detectLocale());
   const [activeDay, setActiveDay] = useState<ActiveDay>("day1");
   const [favorites, setFavorites] = useState<Favorites>(() => {
     try {
@@ -23,6 +25,7 @@ export default function App() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [viewMode, setViewMode] = useState<ViewMode>("timeline");
   const [showMap, setShowMap] = useState(false);
+  const t: AppTranslation = translations[locale];
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -34,6 +37,12 @@ export default function App() {
       localStorage.setItem("simplelife-favorites", JSON.stringify(favorites));
     } catch {}
   }, [favorites]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("simplelife-locale", locale);
+    } catch {}
+  }, [locale]);
 
   const toggleFavorite = (day: string, stage: string, artist: string) => {
     const key = `${day}-${stage}-${artist}`;
@@ -70,7 +79,7 @@ export default function App() {
       if (isFavorite(activeDay, "signing", event.artist)) {
         list.push({
           ...event,
-          stage: "サイン会",
+          stage: t.signing.label,
           type: "signing",
           startMin: parseTime(event.time),
           endMin: parseEndTime(event.time),
@@ -163,13 +172,48 @@ export default function App() {
                 fontSize: 12,
                 color: "#94a3b8",
                 textAlign: "right",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                gap: 6,
               }}
             >
               <div style={{ fontVariantNumeric: "tabular-nums" }}>
-                {currentTime.toLocaleTimeString("ja-JP", {
+                {currentTime.toLocaleTimeString(locale, {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ fontSize: 11, color: "#64748b" }}>
+                  {t.languageLabel}
+                </span>
+                <div style={{ display: "flex", gap: 6 }}>
+                  {(["ja", "zh-TW"] as Locale[]).map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => setLocale(lang)}
+                      style={{
+                        padding: "4px 8px",
+                        borderRadius: 6,
+                        border:
+                          locale === lang
+                            ? "1px solid rgba(255, 136, 176, 0.5)"
+                            : "1px solid rgba(255,255,255,0.1)",
+                        background:
+                          locale === lang
+                            ? "rgba(255, 136, 176, 0.15)"
+                            : "rgba(255,255,255,0.03)",
+                        color: locale === lang ? "#f1f5f9" : "#64748b",
+                        cursor: "pointer",
+                        fontSize: 11,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {lang === "ja" ? "日本語" : "繁體中文"}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -205,15 +249,15 @@ export default function App() {
 
           <div style={{ display: "flex", gap: 6 }}>
             {[
-              { key: "timeline" as const, label: "タイムライン" },
-              { key: "stages" as const, label: "ステージ別" },
+              { key: "timeline" as const, label: t.nav.timeline },
+              { key: "stages" as const, label: t.nav.stages },
               {
                 key: "signing" as const,
-                label: `サイン会 (${signingEvents[activeDay].length})`,
+                label: t.nav.signing(signingEvents[activeDay].length),
               },
               {
                 key: "favorites" as const,
-                label: `★ (${getFavoritesList().length})`,
+                label: t.nav.favorites(getFavoritesList().length),
               },
             ].map((mode) => (
               <button
@@ -260,7 +304,7 @@ export default function App() {
                 textTransform: "uppercase",
               }}
             >
-              次のお気に入り
+              {t.upcomingTitle}
             </div>
             <div
               style={{
@@ -325,9 +369,11 @@ export default function App() {
                       <div style={{ fontSize: 11, color: "#94a3b8" }}>
                         {act.stage} ·{" "}
                         {isNow ? (
-                          <span style={{ color: "#62FA03" }}>NOW</span>
+                          <span style={{ color: "#62FA03" }}>{t.common.now}</span>
                         ) : (
-                          <span>あと {formatCountdown(minutesUntil)}</span>
+                          <span>
+                            {t.timeUntil(formatCountdown(minutesUntil) || "")}
+                          </span>
                         )}
                       </div>
                     </div>
@@ -347,6 +393,7 @@ export default function App() {
             isFavorite={isFavorite}
             toggleFavorite={toggleFavorite}
             getCurrentMinutes={getCurrentMinutes}
+            translation={t}
           />
         )}
 
@@ -357,6 +404,7 @@ export default function App() {
             isFavorite={isFavorite}
             toggleFavorite={toggleFavorite}
             getCurrentMinutes={getCurrentMinutes}
+            translation={t}
           />
         )}
 
@@ -366,6 +414,7 @@ export default function App() {
             activeDay={activeDay}
             toggleFavorite={toggleFavorite}
             getCurrentMinutes={getCurrentMinutes}
+            translation={t}
           />
         )}
 
@@ -376,6 +425,7 @@ export default function App() {
             isFavorite={isFavorite}
             toggleFavorite={toggleFavorite}
             getCurrentMinutes={getCurrentMinutes}
+            translation={t}
           />
         )}
       </main>
@@ -404,7 +454,7 @@ export default function App() {
               textTransform: "uppercase",
             }}
           >
-            Official Links
+            {t.officialLinks}
           </div>
           <div
             style={{
@@ -431,7 +481,7 @@ export default function App() {
               }}
             >
               <span style={{ fontSize: 16 }}>📍</span>
-              会場マップ
+              {t.mapButton}
             </button>
             <a
               href="https://www.threads.com/@simplelifetw"
@@ -498,7 +548,7 @@ export default function App() {
               }}
             >
               <span style={{ fontSize: 16 }}>🛍️</span>
-              グッズ在庫状況
+              {t.goodsStatus}
             </a>
           </div>
         </div>
@@ -586,11 +636,11 @@ export default function App() {
                 cursor: "pointer",
               }}
             >
-              ✕ 閉じる
+              {t.mapClose}
             </button>
             <img
               src="/G63ZjXObkAIoMTz.jpg"
-              alt="Simple Life 2025 会場マップ"
+              alt={t.mapAlt}
               style={{
                 width: "100%",
                 height: "100%",

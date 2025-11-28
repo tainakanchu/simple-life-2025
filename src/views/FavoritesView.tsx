@@ -1,19 +1,22 @@
 import { Act, SigningEvent } from '../types'
 import ActCard from '../components/ActCard'
 import SigningCard from '../components/SigningCard'
+import { AppTranslation } from '../i18n'
 
 interface FavoritesViewProps {
   favorites: (Act | SigningEvent)[]
   activeDay: string
   toggleFavorite: (day: string, stage: string, artist: string) => void
   getCurrentMinutes: () => number
+  translation: AppTranslation
 }
 
 export default function FavoritesView({
   favorites,
   activeDay,
   toggleFavorite,
-  getCurrentMinutes
+  getCurrentMinutes,
+  translation
 }: FavoritesViewProps) {
   const now = getCurrentMinutes()
 
@@ -25,8 +28,8 @@ export default function FavoritesView({
         color: '#64748b',
       }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>☆</div>
-        <div style={{ fontSize: 14 }}>お気に入りがありません</div>
-        <div style={{ fontSize: 12, marginTop: 8 }}>アーティストの ★ や ♡ をタップして追加</div>
+        <div style={{ fontSize: 14 }}>{translation.favoritesEmptyTitle}</div>
+        <div style={{ fontSize: 12, marginTop: 8 }}>{translation.favoritesEmptyHint}</div>
       </div>
     )
   }
@@ -48,6 +51,7 @@ export default function FavoritesView({
               toggleFavorite={toggleFavorite}
               isNow={isNow}
               isPast={isPast}
+              translation={translation}
             />
           )
         }
@@ -62,6 +66,7 @@ export default function FavoritesView({
             isNow={isNow}
             isPast={isPast}
             showStage
+            translation={translation}
           />
         )
       })}

@@ -2,6 +2,7 @@ import { Stage } from "../types";
 import { parseTime, parseEndTime } from "../utils";
 import { stageColors } from "../data";
 import ActCard from "../components/ActCard";
+import { AppTranslation } from "../i18n";
 
 interface StagesViewProps {
   stages: Stage;
@@ -9,6 +10,7 @@ interface StagesViewProps {
   isFavorite: (day: string, stage: string, artist: string) => boolean;
   toggleFavorite: (day: string, stage: string, artist: string) => void;
   getCurrentMinutes: () => number;
+  translation: AppTranslation;
 }
 
 export default function StagesView({
@@ -17,6 +19,7 @@ export default function StagesView({
   isFavorite,
   toggleFavorite,
   getCurrentMinutes,
+  translation,
 }: StagesViewProps) {
   const now = getCurrentMinutes();
 
@@ -70,6 +73,7 @@ export default function StagesView({
                   toggleFavorite={toggleFavorite}
                   isNow={isNow}
                   isPast={isPast}
+                  translation={translation}
                 />
               );
             })}

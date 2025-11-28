@@ -1,5 +1,6 @@
 import { Act } from "../types";
 import { stageColors } from "../data";
+import { AppTranslation } from "../i18n";
 
 interface ActCardProps {
   act: Act;
@@ -9,6 +10,7 @@ interface ActCardProps {
   isNow: boolean;
   isPast: boolean;
   showStage?: boolean;
+  translation: AppTranslation;
 }
 
 export default function ActCard({
@@ -19,6 +21,7 @@ export default function ActCard({
   isNow,
   isPast,
   showStage,
+  translation,
 }: ActCardProps) {
   const fav = isFavorite(activeDay, act.stage || "", act.artist);
   const colors = stageColors[act.stage || ""] || {
@@ -111,7 +114,9 @@ export default function ActCard({
             </>
           )}
           {isNow && (
-            <span style={{ color: "#62FA03", fontWeight: 600 }}>NOW</span>
+            <span style={{ color: "#62FA03", fontWeight: 600 }}>
+              {translation.common.now}
+            </span>
           )}
         </div>
       </div>

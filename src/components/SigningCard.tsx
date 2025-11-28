@@ -1,4 +1,5 @@
 import { SigningEvent } from "../types";
+import { AppTranslation } from "../i18n";
 
 interface SigningCardProps {
   event: SigningEvent;
@@ -7,6 +8,7 @@ interface SigningCardProps {
   toggleFavorite: (day: string, stage: string, artist: string) => void;
   isNow: boolean;
   isPast: boolean;
+  translation: AppTranslation;
 }
 
 export default function SigningCard({
@@ -16,6 +18,7 @@ export default function SigningCard({
   toggleFavorite,
   isNow,
   isPast,
+  translation,
 }: SigningCardProps) {
   const fav = isFavorite(activeDay, "signing", event.artist);
 
@@ -86,10 +89,10 @@ export default function SigningCard({
             color: "#64748b",
           }}
         >
-          <span style={{ color: "#FF88B0" }}>サイン会</span>
+          <span style={{ color: "#FF88B0" }}>{translation.signing.label}</span>
           {isNow && (
             <span style={{ color: "#FF88B0", fontWeight: 600, marginLeft: 6 }}>
-              NOW
+              {translation.common.now}
             </span>
           )}
         </div>
