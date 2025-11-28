@@ -24,7 +24,6 @@ export default function App() {
   });
   const [currentTime, setCurrentTime] = useState(new Date());
   const [viewMode, setViewMode] = useState<ViewMode>("timeline");
-  const [showMap, setShowMap] = useState(false);
   const t: AppTranslation = translations[locale];
 
   useEffect(() => {
@@ -434,6 +433,53 @@ export default function App() {
         style={{
           maxWidth: 960,
           margin: "0 auto",
+          padding: "0 16px 16px",
+        }}
+      >
+        <div
+          style={{
+            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 12,
+            padding: 16,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 11,
+              color: "#64748b",
+              marginBottom: 12,
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+            }}
+          >
+            {t.mapButton}
+          </div>
+          <div
+            style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
+          >
+            <img
+              src="/G63ZjXObkAIoMTz.jpg"
+              alt={t.mapAlt}
+              style={{
+                width: "100%",
+                display: "block",
+                objectFit: "contain",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          maxWidth: 960,
+          margin: "0 auto",
           padding: "16px 16px 24px",
         }}
       >
@@ -463,26 +509,6 @@ export default function App() {
               flexWrap: "wrap",
             }}
           >
-            <button
-              onClick={() => setShowMap(true)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "8px 12px",
-                borderRadius: 8,
-                background: "rgba(255, 136, 176, 0.12)",
-                border: "1px solid rgba(255, 136, 176, 0.3)",
-                color: "#e2e8f0",
-                fontSize: 13,
-                fontWeight: 500,
-                transition: "all 0.15s",
-                cursor: "pointer",
-              }}
-            >
-              <span style={{ fontSize: 16 }}>📍</span>
-              {t.mapButton}
-            </button>
             <a
               href="https://www.threads.com/@simplelifetw"
               target="_blank"
@@ -597,60 +623,6 @@ export default function App() {
 
       <div style={{ height: 60 }} />
 
-      {/* Map Modal */}
-      {showMap && (
-        <div
-          onClick={() => setShowMap(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0, 0, 0, 0.9)",
-            zIndex: 1000,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 20,
-            cursor: "pointer",
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              maxWidth: "90vw",
-              maxHeight: "90vh",
-              position: "relative",
-            }}
-          >
-            <button
-              onClick={() => setShowMap(false)}
-              style={{
-                position: "absolute",
-                top: -40,
-                right: 0,
-                background: "rgba(255,255,255,0.1)",
-                border: "1px solid rgba(255,255,255,0.2)",
-                borderRadius: 8,
-                color: "#f1f5f9",
-                fontSize: 14,
-                padding: "8px 16px",
-                cursor: "pointer",
-              }}
-            >
-              {t.mapClose}
-            </button>
-            <img
-              src="/G63ZjXObkAIoMTz.jpg"
-              alt={t.mapAlt}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                borderRadius: 8,
-              }}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
