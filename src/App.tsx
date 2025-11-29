@@ -156,7 +156,7 @@ export default function App() {
         fontFamily:
           '"Noto Sans TC", "SF Pro Display", -apple-system, sans-serif',
         position: "relative",
-        overflow: "hidden",
+        overflowX: "hidden",
       }}
     >
       <div
