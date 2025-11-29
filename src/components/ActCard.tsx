@@ -27,6 +27,9 @@ export default function ActCard({
   translation,
 }: ActCardProps) {
   const fav = isFavorite(activeDay, act.stage || "", act.artist);
+  const spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(
+    act.artist
+  )}`;
   const colors = stageColors[act.stage || ""] || {
     bg: "rgba(100,100,100,0.15)",
     border: "#888",
@@ -137,6 +140,31 @@ export default function ActCard({
           )}
         </div>
       </div>
+
+      <a
+        href={spotifyUrl}
+        target="_blank"
+        rel="noreferrer"
+        title={`Open ${act.artist} on Spotify`}
+        aria-label={`Open ${act.artist} on Spotify`}
+        style={{
+          width: 36,
+          height: 36,
+          borderRadius: 8,
+          border: "1px solid rgba(30, 215, 96, 0.4)",
+          background: "rgba(30, 215, 96, 0.08)",
+          color: "#1ed760",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 18,
+          flexShrink: 0,
+          textDecoration: "none",
+        }}
+      >
+        ♫
+      </a>
 
       <button
         onClick={() => toggleFavorite(activeDay, act.stage || "", act.artist)}
