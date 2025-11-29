@@ -58,11 +58,6 @@ export default function App() {
     minute: "2-digit",
     hour12: false,
   });
-  const formattedDate = currentTime.toLocaleDateString(locale, {
-    month: "numeric",
-    day: "numeric",
-    weekday: "short",
-  });
 
   useEffect(() => {
     const updateTime = () => setCurrentTime(new Date());
@@ -106,19 +101,19 @@ export default function App() {
 
   useLayoutEffect(() => {
     const el = headerRef.current;
-    if (!el) return;
+    if (!el || typeof window === "undefined") return;
     const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
     measure();
 
-    if ("ResizeObserver" in window) {
+    if (typeof ResizeObserver !== "undefined") {
       const observer = new ResizeObserver(measure);
       observer.observe(el);
       return () => observer.disconnect();
-    } else {
-      const onResize = () => measure();
-      window.addEventListener("resize", onResize, { passive: true });
-      return () => window.removeEventListener("resize", onResize);
     }
+
+    const onResize = () => measure();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   const toggleFavorite = (day: string, stage: string, artist: string) => {
