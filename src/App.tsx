@@ -55,6 +55,7 @@ export default function App() {
   const formattedTime = currentTime.toLocaleTimeString(locale, {
     hour: "2-digit",
     minute: "2-digit",
+    hour12: false,
   });
   const formattedDate = currentTime.toLocaleDateString(locale, {
     month: "numeric",
