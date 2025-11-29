@@ -146,8 +146,10 @@ export default function App() {
           <div
             style={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 12,
               marginBottom: 12,
             }}
           >
@@ -176,77 +178,47 @@ export default function App() {
                 簡單生活節 20th · 台北華山
               </p>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                padding: "8px 12px",
+                borderRadius: 12,
+                border: "1px solid rgba(255,255,255,0.08)",
+                background: "rgba(255,255,255,0.03)",
+                minWidth: 200,
+                maxWidth: "100%",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+              }}
+            >
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                  padding: "8px 12px",
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  background: "rgba(255,255,255,0.03)",
-                  minWidth: 180,
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+                  fontSize: 11,
+                  letterSpacing: "0.08em",
+                  color: "#94a3b8",
+                  textTransform: "uppercase",
+                  width: "100%",
+                  textAlign: "right",
                 }}
               >
-                <div
-                  style={{
-                    fontSize: 11,
-                    letterSpacing: "0.08em",
-                    color: "#94a3b8",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {t.clockLabel}
-                </div>
-                <div
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 800,
-                    color: "#e2e8f0",
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  {formattedTime}
-                </div>
-                <div style={{ fontSize: 11, color: "#64748b" }}>
-                  {formattedDate} · {t.timezone}
-                </div>
-                <div style={{ fontSize: 11, color: "#94a3b8" }}>{dayData.date}</div>
+                {t.clockLabel}
               </div>
-
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ fontSize: 11, color: "#64748b" }}>
-                  {t.languageLabel}
-                </span>
-                <div style={{ display: "flex", gap: 6 }}>
-                  {(["ja", "zh-TW"] as Locale[]).map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => setLocale(lang)}
-                      style={{
-                        padding: "4px 8px",
-                        borderRadius: 6,
-                        border:
-                          locale === lang
-                            ? "1px solid rgba(255, 136, 176, 0.5)"
-                            : "1px solid rgba(255,255,255,0.1)",
-                        background:
-                          locale === lang
-                            ? "linear-gradient(135deg, rgba(255, 136, 176, 0.25), rgba(98, 250, 3, 0.1))"
-                            : "rgba(255,255,255,0.03)",
-                        color: locale === lang ? "#f1f5f9" : "#64748b",
-                        cursor: "pointer",
-                        fontSize: 11,
-                        fontWeight: 600,
-                        transition: "all 0.15s",
-                      }}
-                    >
-                      {lang === "ja" ? "日本語" : "繁體中文"}
-                    </button>
-                  ))}
-                </div>
+              <div
+                style={{
+                  fontSize: 20,
+                  fontWeight: 800,
+                  color: "#e2e8f0",
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                {formattedTime}
+              </div>
+              <div style={{ fontSize: 11, color: "#64748b", textAlign: "right" }}>
+                {formattedDate} · {t.timezone}
+              </div>
+              <div style={{ fontSize: 11, color: "#94a3b8", textAlign: "right" }}>
+                {dayData.date}
               </div>
             </div>
           </div>
@@ -623,7 +595,7 @@ export default function App() {
           background: "rgba(10, 22, 40, 0.95)",
           backdropFilter: "blur(12px)",
           borderTop: "1px solid rgba(255, 136, 176, 0.12)",
-          padding: "8px 16px",
+          padding: "10px 16px",
         }}
       >
         <div
@@ -631,27 +603,61 @@ export default function App() {
             maxWidth: 960,
             margin: "0 auto",
             display: "flex",
-            justifyContent: "center",
-            gap: 16,
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 12,
             flexWrap: "wrap",
           }}
         >
-          {Object.entries(stageColors).map(([stage, colors]) => (
-            <div
-              key={stage}
-              style={{ display: "flex", alignItems: "center", gap: 6 }}
-            >
-              <div
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 3,
-                  background: colors.border,
-                }}
-              />
-              <span style={{ fontSize: 11, color: "#94a3b8" }}>{stage}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <span style={{ fontSize: 11, color: "#94a3b8" }}>{t.languageLabel}</span>
+            <div style={{ display: "flex", gap: 6 }}>
+              {(["ja", "zh-TW"] as Locale[]).map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setLocale(lang)}
+                  style={{
+                    padding: "4px 8px",
+                    borderRadius: 6,
+                    border:
+                      locale === lang
+                        ? "1px solid rgba(255, 136, 176, 0.5)"
+                        : "1px solid rgba(255,255,255,0.1)",
+                    background:
+                      locale === lang
+                        ? "linear-gradient(135deg, rgba(255, 136, 176, 0.25), rgba(98, 250, 3, 0.1))"
+                        : "rgba(255,255,255,0.03)",
+                    color: locale === lang ? "#f1f5f9" : "#64748b",
+                    cursor: "pointer",
+                    fontSize: 11,
+                    fontWeight: 600,
+                    transition: "all 0.15s",
+                  }}
+                >
+                  {lang === "ja" ? "日本語" : "繁體中文"}
+                </button>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap", flex: 1 }}>
+            {Object.entries(stageColors).map(([stage, colors]) => (
+              <div
+                key={stage}
+                style={{ display: "flex", alignItems: "center", gap: 6 }}
+              >
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 3,
+                    background: colors.border,
+                  }}
+                />
+                <span style={{ fontSize: 11, color: "#94a3b8" }}>{stage}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
