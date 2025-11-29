@@ -45,6 +45,11 @@ export default function TimelineView({
         currentHour = hour
         const isNow = act.startMin <= now && act.endMin > now
         const isPast = act.endMin <= now
+        const minutesUntil = isPast
+          ? null
+          : isNow
+          ? act.endMin - now
+          : act.startMin - now
 
         return (
           <React.Fragment key={i}>
@@ -66,6 +71,7 @@ export default function TimelineView({
               toggleFavorite={toggleFavorite}
               isNow={isNow}
               isPast={isPast}
+              minutesUntil={minutesUntil}
               showStage
               translation={translation}
             />

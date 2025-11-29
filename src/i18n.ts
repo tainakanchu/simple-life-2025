@@ -9,6 +9,8 @@ export interface AppTranslation {
   };
   upcomingTitle: string;
   timeUntil: (countdown: string) => string;
+  clockLabel: string;
+  timezone: string;
   officialLinks: string;
   mapButton: string;
   goodsStatus: string;
@@ -29,6 +31,7 @@ export interface AppTranslation {
   };
   common: {
     now: string;
+    endsIn: (countdown: string) => string;
   };
 }
 
@@ -42,6 +45,8 @@ export const translations: Record<Locale, AppTranslation> = {
     },
     upcomingTitle: "次のお気に入り",
     timeUntil: (countdown) => `あと ${countdown}`,
+    clockLabel: "現在時刻",
+    timezone: "台北 (GMT+8)",
     officialLinks: "Official Links",
     mapButton: "会場マップ",
     goodsStatus: "グッズ在庫状況",
@@ -62,6 +67,7 @@ export const translations: Record<Locale, AppTranslation> = {
     },
     common: {
       now: "NOW",
+      endsIn: (countdown) => `${countdown} で終了`,
     },
   },
   "zh-TW": {
@@ -73,6 +79,8 @@ export const translations: Record<Locale, AppTranslation> = {
     },
     upcomingTitle: "稍後的收藏",
     timeUntil: (countdown) => `還有 ${countdown}`,
+    clockLabel: "現在時間",
+    timezone: "台北（GMT+8）",
     officialLinks: "官方連結",
     mapButton: "會場地圖",
     goodsStatus: "周邊庫存資訊",
@@ -93,6 +101,7 @@ export const translations: Record<Locale, AppTranslation> = {
     },
     common: {
       now: "現在",
+      endsIn: (countdown) => `剩下 ${countdown}`,
     },
   },
 };

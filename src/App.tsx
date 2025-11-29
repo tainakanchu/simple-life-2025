@@ -26,6 +26,16 @@ export default function App() {
   const [viewMode, setViewMode] = useState<ViewMode>("timeline");
   const t: AppTranslation = translations[locale];
 
+  const formattedTime = currentTime.toLocaleTimeString(locale, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const formattedDate = currentTime.toLocaleDateString(locale, {
+    month: "numeric",
+    day: "numeric",
+    weekday: "short",
+  });
+
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
     return () => clearInterval(timer);
@@ -166,23 +176,46 @@ export default function App() {
                 簡單生活節 20th · 台北華山
               </p>
             </div>
-            <div
-              style={{
-                fontSize: 12,
-                color: "#94a3b8",
-                textAlign: "right",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                gap: 6,
-              }}
-            >
-              <div style={{ fontVariantNumeric: "tabular-nums" }}>
-                {currentTime.toLocaleTimeString(locale, {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  padding: "8px 12px",
+                  borderRadius: 12,
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  background: "rgba(255,255,255,0.03)",
+                  minWidth: 180,
+                  boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 11,
+                    letterSpacing: "0.08em",
+                    color: "#94a3b8",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {t.clockLabel}
+                </div>
+                <div
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 800,
+                    color: "#e2e8f0",
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {formattedTime}
+                </div>
+                <div style={{ fontSize: 11, color: "#64748b" }}>
+                  {formattedDate} · {t.timezone}
+                </div>
+                <div style={{ fontSize: 11, color: "#94a3b8" }}>{dayData.date}</div>
               </div>
+
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <span style={{ fontSize: 11, color: "#64748b" }}>
                   {t.languageLabel}
@@ -201,12 +234,13 @@ export default function App() {
                             : "1px solid rgba(255,255,255,0.1)",
                         background:
                           locale === lang
-                            ? "rgba(255, 136, 176, 0.15)"
+                            ? "linear-gradient(135deg, rgba(255, 136, 176, 0.25), rgba(98, 250, 3, 0.1))"
                             : "rgba(255,255,255,0.03)",
                         color: locale === lang ? "#f1f5f9" : "#64748b",
                         cursor: "pointer",
                         fontSize: 11,
                         fontWeight: 600,
+                        transition: "all 0.15s",
                       }}
                     >
                       {lang === "ja" ? "日本語" : "繁體中文"}
