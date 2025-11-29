@@ -10,13 +10,15 @@ import { AppTranslation, Locale, detectLocale, translations } from "./i18n";
 
 type ViewMode = "timeline" | "stages" | "signing" | "favorites";
 type ActiveDay = "day1" | "day2";
-const HEADER_HEIGHT = 196;
-const TIMELINE_SCROLL_OFFSET = HEADER_HEIGHT + 8;
+const HEADER_HEIGHT = 92;
+const TIMELINE_SCROLL_OFFSET = HEADER_HEIGHT + 16;
 
 const getDefaultActiveDay = (): ActiveDay => {
   const today = new Date();
   const isDay2Date =
-    today.getFullYear() === 2025 && today.getMonth() === 10 && today.getDate() === 30;
+    today.getFullYear() === 2025 &&
+    today.getMonth() === 10 &&
+    today.getDate() === 30;
   return isDay2Date ? "day2" : "day1";
 };
 
@@ -35,7 +37,9 @@ const isActiveDayToday = (day: ActiveDay) => {
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => detectLocale());
-  const [activeDay, setActiveDay] = useState<ActiveDay>(() => getDefaultActiveDay());
+  const [activeDay, setActiveDay] = useState<ActiveDay>(() =>
+    getDefaultActiveDay()
+  );
   const [favorites, setFavorites] = useState<Favorites>(() => {
     try {
       const saved = localStorage.getItem("simplelife-favorites");
@@ -191,53 +195,88 @@ export default function App() {
           borderBottom: "1px solid rgba(255, 136, 176, 0.2)",
         }}
       >
-        <div style={{ maxWidth: 960, margin: "0 auto", padding: "12px 16px" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", padding: "10px 16px" }}>
           <div
             style={{
               display: "flex",
-              alignItems: "flex-start",
+              alignItems: "center",
               justifyContent: "space-between",
               flexWrap: "wrap",
               gap: 12,
-              marginBottom: 12,
+              marginBottom: 8,
             }}
           >
-            <div>
-              <h1
-                style={{
-                  fontSize: 20,
-                  fontWeight: 700,
-                  letterSpacing: "-0.02em",
-                  background: "linear-gradient(135deg, #FF88B0, #62FA03)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  margin: 0,
-                }}
-              >
-                Simple Life 2025
-              </h1>
-              <p
-                style={{
-                  fontSize: 11,
-                  color: "#64748b",
-                  margin: "2px 0 0",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                簡單生活節 20th · 台北華山
-              </p>
-            </div>
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                padding: "8px 12px",
+                alignItems: "center",
+                gap: 12,
+                flexWrap: "wrap",
+              }}
+            >
+              <div>
+                <h1
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 800,
+                    letterSpacing: "-0.02em",
+                    background: "linear-gradient(135deg, #FF88B0, #62FA03)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    margin: 0,
+                  }}
+                >
+                  Simple Life 2025
+                </h1>
+                <div
+                  style={{
+                    fontSize: 10,
+                    color: "#94a3b8",
+                    letterSpacing: "0.06em",
+                    marginTop: 2,
+                  }}
+                >
+                  {dayData.date} · {t.timezone}
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 6 }}>
+                {(["day1", "day2"] as const).map((day) => (
+                  <button
+                    key={day}
+                    onClick={() => setActiveDay(day)}
+                    style={{
+                      padding: "6px 10px",
+                      borderRadius: 999,
+                      border:
+                        activeDay === day
+                          ? "1px solid rgba(255, 136, 176, 0.6)"
+                          : "1px solid rgba(255,255,255,0.12)",
+                      background:
+                        activeDay === day
+                          ? "linear-gradient(135deg, rgba(255, 136, 176, 0.25), rgba(98, 250, 3, 0.12))"
+                          : "rgba(255,255,255,0.05)",
+                      color: activeDay === day ? "#f1f5f9" : "#94a3b8",
+                      cursor: "pointer",
+                      transition: "all 0.2s",
+                      fontWeight: 700,
+                      fontSize: 12,
+                    }}
+                  >
+                    {festivalData[day].date}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "8px 10px",
                 borderRadius: 12,
                 border: "1px solid rgba(255,255,255,0.08)",
-                background: "rgba(255,255,255,0.03)",
-                minWidth: 200,
-                maxWidth: "100%",
+                background: "rgba(255,255,255,0.04)",
                 boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
               }}
             >
@@ -247,15 +286,13 @@ export default function App() {
                   letterSpacing: "0.08em",
                   color: "#94a3b8",
                   textTransform: "uppercase",
-                  width: "100%",
-                  textAlign: "right",
                 }}
               >
                 {t.clockLabel}
               </div>
               <div
                 style={{
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: 800,
                   color: "#e2e8f0",
                   fontVariantNumeric: "tabular-nums",
@@ -263,45 +300,17 @@ export default function App() {
               >
                 {formattedTime}
               </div>
-              <div style={{ fontSize: 11, color: "#64748b", textAlign: "right" }}>
-                {formattedDate} · {t.timezone}
-              </div>
-              <div style={{ fontSize: 11, color: "#94a3b8", textAlign: "right" }}>
-                {dayData.date}
-              </div>
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-            {(["day1", "day2"] as const).map((day) => (
-              <button
-                key={day}
-                onClick={() => setActiveDay(day)}
-                style={{
-                  flex: 1,
-                  padding: "10px 16px",
-                  borderRadius: 10,
-                  border:
-                    activeDay === day
-                      ? "1px solid rgba(255, 136, 176, 0.5)"
-                      : "1px solid rgba(255,255,255,0.1)",
-                  background:
-                    activeDay === day
-                      ? "linear-gradient(135deg, rgba(255, 136, 176, 0.2), rgba(98, 250, 3, 0.08))"
-                      : "rgba(255,255,255,0.03)",
-                  color: activeDay === day ? "#f1f5f9" : "#64748b",
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                  fontWeight: 600,
-                  fontSize: 13,
-                }}
-              >
-                {festivalData[day].date}
-              </button>
-            ))}
-          </div>
-
-          <div style={{ display: "flex", gap: 6 }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
             {[
               { key: "timeline" as const, label: t.nav.timeline },
               { key: "stages" as const, label: t.nav.stages },
@@ -318,17 +327,17 @@ export default function App() {
                 key={mode.key}
                 onClick={() => setViewMode(mode.key)}
                 style={{
-                  padding: "6px 12px",
-                  borderRadius: 6,
+                  padding: "6px 10px",
+                  borderRadius: 8,
                   border: "none",
                   background:
                     viewMode === mode.key
-                      ? "rgba(255,255,255,0.12)"
-                      : "transparent",
-                  color: viewMode === mode.key ? "#f1f5f9" : "#64748b",
+                      ? "rgba(255,255,255,0.14)"
+                      : "rgba(255,255,255,0.04)",
+                  color: viewMode === mode.key ? "#f1f5f9" : "#94a3b8",
                   cursor: "pointer",
                   fontSize: 12,
-                  fontWeight: 500,
+                  fontWeight: 600,
                   transition: "all 0.15s",
                 }}
               >
@@ -423,7 +432,9 @@ export default function App() {
                       <div style={{ fontSize: 11, color: "#94a3b8" }}>
                         {act.stage} ·{" "}
                         {isNow ? (
-                          <span style={{ color: "#62FA03" }}>{t.common.now}</span>
+                          <span style={{ color: "#62FA03" }}>
+                            {t.common.now}
+                          </span>
                         ) : (
                           <span>
                             {t.timeUntil(formatCountdown(minutesUntil) || "")}
@@ -663,8 +674,17 @@ export default function App() {
             flexWrap: "wrap",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 11, color: "#94a3b8" }}>{t.languageLabel}</span>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flexWrap: "wrap",
+            }}
+          >
+            <span style={{ fontSize: 11, color: "#94a3b8" }}>
+              {t.languageLabel}
+            </span>
             <div style={{ display: "flex", gap: 6 }}>
               {(["ja", "zh-TW"] as Locale[]).map((lang) => (
                 <button
@@ -694,7 +714,15 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap", flex: 1 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 16,
+              flexWrap: "wrap",
+              flex: 1,
+            }}
+          >
             {Object.entries(stageColors).map(([stage, colors]) => (
               <div
                 key={stage}
@@ -716,7 +744,6 @@ export default function App() {
       </div>
 
       <div style={{ height: 60 }} />
-
     </div>
   );
 }
