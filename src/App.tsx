@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { festivalData, signingEvents, stageColors } from "./data";
 import { parseTime, parseEndTime, formatCountdown } from "./utils";
 import { Favorites, Act, SigningEvent } from "./types";
@@ -10,8 +10,7 @@ import { AppTranslation, Locale, detectLocale, translations } from "./i18n";
 
 type ViewMode = "timeline" | "stages" | "signing" | "favorites";
 type ActiveDay = "day1" | "day2";
-const HEADER_HEIGHT = 92;
-const TIMELINE_SCROLL_OFFSET = HEADER_HEIGHT + 16;
+const HEADER_BASE_HEIGHT = 92;
 
 const getDefaultActiveDay = (): ActiveDay => {
   const today = new Date();
@@ -50,6 +49,8 @@ export default function App() {
   });
   const [currentTime, setCurrentTime] = useState(new Date());
   const [viewMode, setViewMode] = useState<ViewMode>("timeline");
+  const [headerHeight, setHeaderHeight] = useState(HEADER_BASE_HEIGHT);
+  const headerRef = useRef<HTMLElement | null>(null);
   const t: AppTranslation = translations[locale];
 
   const formattedTime = currentTime.toLocaleTimeString(locale, {
@@ -102,6 +103,23 @@ export default function App() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [viewMode]);
+
+  useLayoutEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
+    measure();
+
+    if ("ResizeObserver" in window) {
+      const observer = new ResizeObserver(measure);
+      observer.observe(el);
+      return () => observer.disconnect();
+    } else {
+      const onResize = () => measure();
+      window.addEventListener("resize", onResize, { passive: true });
+      return () => window.removeEventListener("resize", onResize);
+    }
+  }, []);
 
   const toggleFavorite = (day: string, stage: string, artist: string) => {
     const key = `${day}-${stage}-${artist}`;
@@ -158,6 +176,7 @@ export default function App() {
   const dayData = festivalData[activeDay];
   const upcomingFavs = getUpcoming();
   const isLiveDay = isActiveDayToday(activeDay);
+  const timelineScrollOffset = headerHeight + 12;
 
   return (
     <div
@@ -170,7 +189,7 @@ export default function App() {
           '"Noto Sans TC", "SF Pro Display", -apple-system, sans-serif',
         position: "relative",
         overflowX: "hidden",
-        paddingTop: HEADER_HEIGHT,
+        paddingTop: headerHeight,
       }}
     >
       <div
@@ -185,6 +204,7 @@ export default function App() {
       />
 
       <header
+        ref={headerRef}
         style={{
           position: "fixed",
           top: 0,
@@ -460,7 +480,7 @@ export default function App() {
             toggleFavorite={toggleFavorite}
             getCurrentMinutes={getCurrentMinutes}
             isLiveDay={isLiveDay}
-            scrollOffset={TIMELINE_SCROLL_OFFSET}
+            scrollOffset={timelineScrollOffset}
             translation={t}
           />
         )}
