@@ -1,5 +1,6 @@
 import { SigningEvent } from "../types";
 import { AppTranslation } from "../i18n";
+import { formatCountdown } from "../utils";
 
 interface SigningCardProps {
   event: SigningEvent;
@@ -8,6 +9,7 @@ interface SigningCardProps {
   toggleFavorite: (day: string, stage: string, artist: string) => void;
   isNow: boolean;
   isPast: boolean;
+  minutesUntil?: number | null;
   translation: AppTranslation;
 }
 
@@ -18,6 +20,7 @@ export default function SigningCard({
   toggleFavorite,
   isNow,
   isPast,
+  minutesUntil,
   translation,
 }: SigningCardProps) {
   const fav = isFavorite(activeDay, "signing", event.artist);
@@ -93,6 +96,11 @@ export default function SigningCard({
           {isNow && (
             <span style={{ color: "#FF88B0", fontWeight: 600, marginLeft: 6 }}>
               {translation.common.now}
+            </span>
+          )}
+          {!isPast && !isNow && minutesUntil !== undefined && minutesUntil !== null && (
+            <span style={{ marginLeft: 6, color: "#94a3b8" }}>
+              {translation.timeUntil(formatCountdown(minutesUntil) || "")}
             </span>
           )}
         </div>

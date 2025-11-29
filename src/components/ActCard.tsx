@@ -1,6 +1,7 @@
 import { Act } from "../types";
 import { stageColors } from "../data";
 import { AppTranslation } from "../i18n";
+import { formatCountdown } from "../utils";
 
 interface ActCardProps {
   act: Act;
@@ -10,6 +11,7 @@ interface ActCardProps {
   isNow: boolean;
   isPast: boolean;
   showStage?: boolean;
+  minutesUntil?: number | null;
   translation: AppTranslation;
 }
 
@@ -21,6 +23,7 @@ export default function ActCard({
   isNow,
   isPast,
   showStage,
+  minutesUntil,
   translation,
 }: ActCardProps) {
   const fav = isFavorite(activeDay, act.stage || "", act.artist);
@@ -110,6 +113,20 @@ export default function ActCard({
                 }}
               >
                 {act.sub}
+              </span>
+            </>
+          )}
+          {!isPast && minutesUntil !== undefined && minutesUntil !== null && (
+            <>
+              {act.sub && <span>·</span>}
+              <span style={{ color: isNow ? "#62FA03" : "#94a3b8" }}>
+                {isNow
+                  ? translation.common.endsIn(
+                      formatCountdown(minutesUntil) || ""
+                    )
+                  : translation.timeUntil(
+                      formatCountdown(minutesUntil) || ""
+                    )}
               </span>
             </>
           )}

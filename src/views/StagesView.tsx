@@ -64,6 +64,11 @@ export default function StagesView({
               const endMin = parseEndTime(act.time);
               const isNow = startMin <= now && endMin > now;
               const isPast = endMin <= now;
+              const minutesUntil = isPast
+                ? null
+                : isNow
+                ? endMin - now
+                : startMin - now;
               return (
                 <ActCard
                   key={i}
@@ -73,6 +78,7 @@ export default function StagesView({
                   toggleFavorite={toggleFavorite}
                   isNow={isNow}
                   isPast={isPast}
+                  minutesUntil={minutesUntil}
                   translation={translation}
                 />
               );

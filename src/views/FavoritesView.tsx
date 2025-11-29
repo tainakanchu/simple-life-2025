@@ -40,6 +40,11 @@ export default function FavoritesView({
         const isNow = act.startMin! <= now && act.endMin! > now
         const isPast = act.endMin! <= now
         const isSigning = act.type === 'signing'
+        const minutesUntil = isPast
+          ? null
+          : isNow
+          ? act.endMin! - now
+          : act.startMin! - now
 
         if (isSigning) {
           return (
@@ -51,6 +56,7 @@ export default function FavoritesView({
               toggleFavorite={toggleFavorite}
               isNow={isNow}
               isPast={isPast}
+              minutesUntil={minutesUntil}
               translation={translation}
             />
           )
@@ -65,6 +71,7 @@ export default function FavoritesView({
             toggleFavorite={toggleFavorite}
             isNow={isNow}
             isPast={isPast}
+            minutesUntil={minutesUntil}
             showStage
             translation={translation}
           />
