@@ -171,7 +171,7 @@ export default function App() {
   const dayData = festivalData[activeDay];
   const upcomingFavs = getUpcoming();
   const isLiveDay = isActiveDayToday(activeDay);
-  const timelineScrollOffset = headerHeight + 12;
+  const timelineScrollOffset = headerHeight + 40;
 
   return (
     <div
