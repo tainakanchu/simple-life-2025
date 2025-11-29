@@ -11,6 +11,7 @@ interface TimelineViewProps {
   toggleFavorite: (day: string, stage: string, artist: string) => void
   getCurrentMinutes: () => number
   isLiveDay: boolean
+  scrollOffset: number
   translation: AppTranslation
 }
 
@@ -21,6 +22,7 @@ export default function TimelineView({
   toggleFavorite,
   getCurrentMinutes,
   isLiveDay,
+  scrollOffset,
   translation
 }: TimelineViewProps) {
   const scrollTargetRef = React.useRef<HTMLDivElement | null>(null)
@@ -61,10 +63,12 @@ export default function TimelineView({
     if (!isLiveDay || scrollTargetIndex === -1 || hasScrolledRef.current) return
     const el = scrollTargetRef.current
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      const top =
+        el.getBoundingClientRect().top + window.scrollY - scrollOffset
+      window.scrollTo({ top, behavior: 'smooth' })
       hasScrolledRef.current = true
     }
-  }, [isLiveDay, now, scrollTargetIndex])
+  }, [isLiveDay, now, scrollTargetIndex, scrollOffset])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

@@ -10,6 +10,8 @@ import { AppTranslation, Locale, detectLocale, translations } from "./i18n";
 
 type ViewMode = "timeline" | "stages" | "signing" | "favorites";
 type ActiveDay = "day1" | "day2";
+const HEADER_HEIGHT = 196;
+const TIMELINE_SCROLL_OFFSET = HEADER_HEIGHT + 8;
 
 const getDefaultActiveDay = (): ActiveDay => {
   const today = new Date();
@@ -90,6 +92,12 @@ export default function App() {
     } catch {}
   }, [locale]);
 
+  useEffect(() => {
+    if (["stages", "signing", "favorites"].includes(viewMode)) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [viewMode]);
+
   const toggleFavorite = (day: string, stage: string, artist: string) => {
     const key = `${day}-${stage}-${artist}`;
     setFavorites((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -157,6 +165,7 @@ export default function App() {
           '"Noto Sans TC", "SF Pro Display", -apple-system, sans-serif',
         position: "relative",
         overflowX: "hidden",
+        paddingTop: HEADER_HEIGHT,
       }}
     >
       <div
@@ -172,8 +181,10 @@ export default function App() {
 
       <header
         style={{
-          position: "sticky",
+          position: "fixed",
           top: 0,
+          left: 0,
+          right: 0,
           zIndex: 50,
           backdropFilter: "blur(20px)",
           background: "rgba(10, 22, 40, 0.9)",
@@ -437,6 +448,7 @@ export default function App() {
             toggleFavorite={toggleFavorite}
             getCurrentMinutes={getCurrentMinutes}
             isLiveDay={isLiveDay}
+            scrollOffset={TIMELINE_SCROLL_OFFSET}
             translation={t}
           />
         )}
