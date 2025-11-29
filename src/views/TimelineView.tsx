@@ -10,6 +10,7 @@ interface TimelineViewProps {
   isFavorite: (day: string, stage: string, artist: string) => boolean
   toggleFavorite: (day: string, stage: string, artist: string) => void
   getCurrentMinutes: () => number
+  isLiveDay: boolean
   translation: AppTranslation
 }
 
@@ -19,6 +20,7 @@ export default function TimelineView({
   isFavorite,
   toggleFavorite,
   getCurrentMinutes,
+  isLiveDay,
   translation
 }: TimelineViewProps) {
   const allActs: any[] = []
@@ -34,7 +36,7 @@ export default function TimelineView({
   })
   allActs.sort((a, b) => a.startMin - b.startMin)
 
-  const now = getCurrentMinutes()
+  const now = isLiveDay ? getCurrentMinutes() : null
   let currentHour: number | null = null
 
   return (
@@ -43,9 +45,11 @@ export default function TimelineView({
         const hour = Math.floor(act.startMin / 60)
         const showHour = hour !== currentHour
         currentHour = hour
-        const isNow = act.startMin <= now && act.endMin > now
-        const isPast = act.endMin <= now
-        const minutesUntil = isPast
+        const isNow = isLiveDay && now !== null && act.startMin <= now && act.endMin > now
+        const isPast = isLiveDay && now !== null && act.endMin <= now
+        const minutesUntil = !isLiveDay || now === null
+          ? null
+          : isPast
           ? null
           : isNow
           ? act.endMin - now

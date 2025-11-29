@@ -8,6 +8,7 @@ interface SigningViewProps {
   isFavorite: (day: string, stage: string, artist: string) => boolean;
   toggleFavorite: (day: string, stage: string, artist: string) => void;
   getCurrentMinutes: () => number;
+  isLiveDay: boolean;
   translation: AppTranslation;
 }
 
@@ -17,9 +18,10 @@ export default function SigningView({
   isFavorite,
   toggleFavorite,
   getCurrentMinutes,
+  isLiveDay,
   translation,
 }: SigningViewProps) {
-  const now = getCurrentMinutes();
+  const now = isLiveDay ? getCurrentMinutes() : null;
 
   const toggleSigningFavorite = (artist: string) => {
     toggleFavorite(activeDay, "signing", artist);
@@ -81,9 +83,10 @@ export default function SigningView({
         {events.map((event, i) => {
           const startMin = parseTime(event.time);
           const endMin = parseEndTime(event.time);
-          const isNow = startMin <= now && endMin > now;
-          const isPast = endMin <= now;
-          const minutesUntil = startMin - now;
+          const isNow = isLiveDay && now !== null && startMin <= now && endMin > now;
+          const isPast = isLiveDay && now !== null && endMin <= now;
+          const minutesUntil =
+            !isLiveDay || now === null ? null : startMin - now;
           const fav = isSigningFavorite(event.artist);
 
           return (
@@ -164,7 +167,7 @@ export default function SigningView({
                     </span>
                   ) : isPast ? (
                     <span>{translation.signing.ended}</span>
-                  ) : minutesUntil <= 30 ? (
+                  ) : minutesUntil !== null && minutesUntil <= 30 ? (
                     <span style={{ color: "#62FA03" }}>
                       {translation.timeUntil(formatCountdown(minutesUntil) || "")}
                     </span>
@@ -174,7 +177,7 @@ export default function SigningView({
                 </div>
               </div>
 
-              {!isPast && !isNow && minutesUntil <= 60 && (
+              {!isPast && !isNow && minutesUntil !== null && minutesUntil <= 60 && (
                 <div
                   style={{
                     padding: "4px 8px",

@@ -18,6 +18,19 @@ const getDefaultActiveDay = (): ActiveDay => {
   return isDay2Date ? "day2" : "day1";
 };
 
+const isActiveDayToday = (day: ActiveDay) => {
+  const today = new Date();
+  const targets =
+    day === "day1"
+      ? { year: 2025, month: 10, date: 29 }
+      : { year: 2025, month: 10, date: 30 };
+  return (
+    today.getFullYear() === targets.year &&
+    today.getMonth() === targets.month &&
+    today.getDate() === targets.date
+  );
+};
+
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => detectLocale());
   const [activeDay, setActiveDay] = useState<ActiveDay>(() => getDefaultActiveDay());
@@ -131,6 +144,7 @@ export default function App() {
 
   const dayData = festivalData[activeDay];
   const upcomingFavs = getUpcoming();
+  const isLiveDay = isActiveDayToday(activeDay);
 
   return (
     <div
@@ -422,6 +436,7 @@ export default function App() {
             isFavorite={isFavorite}
             toggleFavorite={toggleFavorite}
             getCurrentMinutes={getCurrentMinutes}
+            isLiveDay={isLiveDay}
             translation={t}
           />
         )}
@@ -433,6 +448,7 @@ export default function App() {
             isFavorite={isFavorite}
             toggleFavorite={toggleFavorite}
             getCurrentMinutes={getCurrentMinutes}
+            isLiveDay={isLiveDay}
             translation={t}
           />
         )}
@@ -443,6 +459,7 @@ export default function App() {
             activeDay={activeDay}
             toggleFavorite={toggleFavorite}
             getCurrentMinutes={getCurrentMinutes}
+            isLiveDay={isLiveDay}
             translation={t}
           />
         )}
@@ -454,6 +471,7 @@ export default function App() {
             isFavorite={isFavorite}
             toggleFavorite={toggleFavorite}
             getCurrentMinutes={getCurrentMinutes}
+            isLiveDay={isLiveDay}
             translation={t}
           />
         )}

@@ -10,6 +10,7 @@ interface StagesViewProps {
   isFavorite: (day: string, stage: string, artist: string) => boolean;
   toggleFavorite: (day: string, stage: string, artist: string) => void;
   getCurrentMinutes: () => number;
+  isLiveDay: boolean;
   translation: AppTranslation;
 }
 
@@ -19,9 +20,10 @@ export default function StagesView({
   isFavorite,
   toggleFavorite,
   getCurrentMinutes,
+  isLiveDay,
   translation,
 }: StagesViewProps) {
-  const now = getCurrentMinutes();
+  const now = isLiveDay ? getCurrentMinutes() : null;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -62,13 +64,17 @@ export default function StagesView({
             {acts.map((act, i) => {
               const startMin = parseTime(act.time);
               const endMin = parseEndTime(act.time);
-              const isNow = startMin <= now && endMin > now;
-              const isPast = endMin <= now;
-              const minutesUntil = isPast
-                ? null
-                : isNow
-                ? endMin - now
-                : startMin - now;
+              const isNow =
+                isLiveDay && now !== null && startMin <= now && endMin > now;
+              const isPast = isLiveDay && now !== null && endMin <= now;
+              const minutesUntil =
+                !isLiveDay || now === null
+                  ? null
+                  : isPast
+                  ? null
+                  : isNow
+                  ? endMin - now
+                  : startMin - now;
               return (
                 <ActCard
                   key={i}

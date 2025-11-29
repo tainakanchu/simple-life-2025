@@ -8,6 +8,7 @@ interface FavoritesViewProps {
   activeDay: string
   toggleFavorite: (day: string, stage: string, artist: string) => void
   getCurrentMinutes: () => number
+  isLiveDay: boolean
   translation: AppTranslation
 }
 
@@ -16,9 +17,10 @@ export default function FavoritesView({
   activeDay,
   toggleFavorite,
   getCurrentMinutes,
+  isLiveDay,
   translation
 }: FavoritesViewProps) {
-  const now = getCurrentMinutes()
+  const now = isLiveDay ? getCurrentMinutes() : null
 
   if (favorites.length === 0) {
     return (
@@ -37,10 +39,12 @@ export default function FavoritesView({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {favorites.map((act, i) => {
-        const isNow = act.startMin! <= now && act.endMin! > now
-        const isPast = act.endMin! <= now
+        const isNow = isLiveDay && now !== null && act.startMin! <= now && act.endMin! > now
+        const isPast = isLiveDay && now !== null && act.endMin! <= now
         const isSigning = act.type === 'signing'
-        const minutesUntil = isPast
+        const minutesUntil = !isLiveDay || now === null
+          ? null
+          : isPast
           ? null
           : isNow
           ? act.endMin! - now
