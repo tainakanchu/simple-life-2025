@@ -11,9 +11,16 @@ import { AppTranslation, Locale, detectLocale, translations } from "./i18n";
 type ViewMode = "timeline" | "stages" | "signing" | "favorites";
 type ActiveDay = "day1" | "day2";
 
+const getDefaultActiveDay = (): ActiveDay => {
+  const today = new Date();
+  const isDay2Date =
+    today.getFullYear() === 2025 && today.getMonth() === 10 && today.getDate() === 30;
+  return isDay2Date ? "day2" : "day1";
+};
+
 export default function App() {
   const [locale, setLocale] = useState<Locale>(() => detectLocale());
-  const [activeDay, setActiveDay] = useState<ActiveDay>("day1");
+  const [activeDay, setActiveDay] = useState<ActiveDay>(() => getDefaultActiveDay());
   const [favorites, setFavorites] = useState<Favorites>(() => {
     try {
       const saved = localStorage.getItem("simplelife-favorites");
