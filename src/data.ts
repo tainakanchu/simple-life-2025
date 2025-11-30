@@ -50,7 +50,7 @@ export const festivalData: FestivalData = {
         { time: '20:40 - 21:30', artist: '伍佰&China Blue feat. 李宗盛', sub: '' },
       ],
       '微風舞台': [
-        { time: '14:00 - 14:40', artist: '王榮筑 Hui Chu Wang', sub: '' },
+        { time: '14:00 - 14:40', artist: '王彙筑 Hui Chu Wang', sub: '' },
         { time: '15:30 - 16:00', artist: '戴曉君 Sauljaljui', sub: '' },
         { time: '16:40 - 17:20', artist: 'Theseus式修斯', sub: '' },
         { time: '18:10 - 18:50', artist: '白安ANN', sub: '' },
